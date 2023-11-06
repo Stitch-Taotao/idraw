@@ -78,26 +78,29 @@ class _WorldState extends State<World> with SingleTickerProviderStateMixin {
 
   void initParticles() async {
     ByteData data = await rootBundle.load("assets/images/flutter.png");
-    List<int> bytes = data.buffer.asUint8List(data.offsetInBytes, data.lengthInBytes);
+    List<int> bytes =
+        data.buffer.asUint8List(data.offsetInBytes, data.lengthInBytes);
     image.Image? imageSrc = image.decodeImage(Uint8List.fromList(bytes));
-    if(imageSrc==null) return;
+    if (imageSrc == null) return;
 
-    double offsetX=  (pm.size.width-imageSrc.width)/2;
-    double offsetY=  (pm.size.height-imageSrc.height)/2;
+    double offsetX = (pm.size.width - imageSrc.width) / 2;
+    double offsetY = (pm.size.height - imageSrc.height) / 2;
 
     for (int i = 0; i < imageSrc.width; i++) {
       for (int j = 0; j < imageSrc.height; j++) {
-        print('-($i,$j)----${imageSrc.getPixel(i, j)}---------------');
+        final pixel = imageSrc.getPixel(i, j);
+        print('-($i,$j)----$pixel----${pixel.runtimeType}---${pixel.a},${pixel.r},${pixel.g},${pixel.b}--------');
 
-        if (imageSrc.getPixel(i, j) == 0xff000000) {
+        // if (pixel.a!=0&&pixel.r!=0&&pixel.g!=0&&pixel.b!=0) {
+        if (pixel.a>=240&&pixel.r==0&&pixel.g==0&&pixel.b==0) {
           // print('-($i,$j)----${imageSrc.getPixel(i, j)}---------------');
 
           Particle particle = Particle(
-              x: i * 1.0+ offsetX,
-              y: j * 1.0+ offsetY,
-                  vx: 4 * random.nextDouble() * pow(-1, random.nextInt(20)),
-                  vy: 4 * random.nextDouble() * pow(-1, random.nextInt(20)),
-                  ay: 0.1,
+              x: i * 1.0 + offsetX,
+              y: j * 1.0 + offsetY,
+              vx: 4 * random.nextDouble() * pow(-1, random.nextInt(20)),
+              vy: 4 * random.nextDouble() * pow(-1, random.nextInt(20)),
+              ay: 0.1,
               size: 0.5,
               color: Colors.blue); //产生粒子---每个粒子拥有随机的一些属性信息
 
